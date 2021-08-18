@@ -3,7 +3,7 @@ resource "google_compute_organization_security_policy" "OrgSecPolicy" {
   provider = google-beta
 
   display_name = var.org_security_policy_name
-  parent       = data.google_organization.organization.name
+  parent       = google_folder.Demo.id
 }
 
 resource "google_compute_organization_security_policy_rule" "OrgSecPolicyRule" {

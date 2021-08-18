@@ -27,7 +27,8 @@ All contents of this repository are provided ​“AS IS”. The developer(s) an
   * `r_projects_apis.tf` - enables necessary APIs in the Production and Development projects.
   * `r_projects.tf` - creates a Production and a Development project, nested under folders defined in `r_folders.tf`.
   * `r_random.tf` - generates a 6-character random ID that is appended to resource names requiring global uniqueness (e.g., projects and GCS buckets)
-  * `r_security_policy.tf` - creates [hierarchical firewall](https://cloud.google.com/vpc/docs/firewall-policies) policies and attaches them to the organization (from `d_organization.tf`) and to the Production folder (from `r_folders.tf`).
+  * `r_security_policy.tf` - creates [hierarchical firewall](https://cloud.google.com/vpc/docs/firewall-policies) policies and attaches them to the IAP Demo ("root" folder) and the Production folders (from `r_folders.tf`).
+    * The hierarchical firewall is expressly not attached to the organization node to avoid conflicts with pre-existing hierarchical firewall policies, or corporate/institutional security policies. Instead, it is attached to the "root" folder (called IAP Demo by default) created by `r_folders.tf` to emulate attaching a policy to the organization node.
   * `terraform.tfvars` - SAMPLE/EXAMPLE variable values for `_vars.tf`. **You should review and change this file to suit your needs.**
   * `ProdStartupScripts/`
     * `nginx.sh` - a startup script that installs nginx, ElasticSearch, and Kibana to serve as a sample application behind the IAP-enabled HTTP(S) load balancer.
@@ -44,7 +45,7 @@ All contents of this repository are provided ​“AS IS”. The developer(s) an
     * `terraform destroy` to destroy all resources that Terraform created.
 
 ## Notes and caveats
-* All resources created by Terraform will be deleted after executing `terraform destroy`. Do not save your work in (or otherwise rely on) the folders, projects, instances, or buckets created by this repo.
+* This is a self-contained repo. All resources created by Terraform will be deleted after executing `terraform destroy`. Do not save your work in (or otherwise rely on) the folders, projects, instances, or buckets created by this repo.
 
 * You will need to create a DNS A record that binds the domain configured in `google_managed_cert_domain` to the static IP address created from the `google_compute_global_address.IapIpAddress` resource, in order for the Google-managed TLS certificate to be provisioned. 
   * The IP address of the load balancer will automatically be output upon a successful `terraform apply`. 
